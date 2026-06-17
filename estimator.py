@@ -1,11 +1,8 @@
-#!/opt/pyenv/shims/python
+#!venv/bin/python
 
 import sys
 from additional_exceptions import EmptyFileNameError
-
-def exit_with_print(code: int = 1, message: str = ""):
-    sys.stderr.write(message + "\n")
-    exit(code)
+from additional_utils import exit_with_print
 
 def get_vars(filepath: str = ""):
     if (filepath == ""):
@@ -40,7 +37,7 @@ if __name__ == "__main__":
     while (True):
         x = 0.0
         try:
-            x = float(input("Enter the mileage (...in kilometers): "))
+            x = float(input("Enter the mileage: "))
             y = theta0 + theta1 * x;
             print(f"Calculated price estmation: {y:.2f}")
         except ValueError:
