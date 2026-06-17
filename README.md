@@ -9,3 +9,8 @@ Given a dataset of car mileages and their prices, estimate a function that predi
 2. both then and in every subsequent run `source venv/bin/activate`
 3. if this is the first run, `pip install -r requirements.txt`
 4. done working? `deactivate`
+
+## Licensing
+
+- [LICENSES/LICENSE-MIT](LICENSES/LICENSE-MIT) for the project,
+- [LICENSES/LICENSE-APACHE-2.0](LICENSES/LICENSE-APACHE-2.0) for the `data_kaggle.csv`. The data itself was obtained from [here](https://www.kaggle.com/datasets/amisha1571/car-cleaned-dataset) and then transformed to match the project specifications.
