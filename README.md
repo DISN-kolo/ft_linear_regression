@@ -12,5 +12,4 @@ Given a dataset of car mileages and their prices, estimate a function that predi
 
 ## Licensing
 
-- [LICENSES/LICENSE-MIT](LICENSES/LICENSE-MIT) for the project,
-- [LICENSES/LICENSE-APACHE-2.0](LICENSES/LICENSE-APACHE-2.0) for the `data_kaggle.csv`. The data itself was obtained from [here](https://www.kaggle.com/datasets/amisha1571/car-cleaned-dataset) and then transformed to match the project specifications.
+- [LICENSES/LICENSE-MIT](LICENSES/LICENSE-MIT) for the project
