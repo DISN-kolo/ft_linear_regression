@@ -21,6 +21,7 @@ def get_vars(filepath: str = ""):
 if __name__ == "__main__":
     if (len(sys.argv) != 2):
         exit_with_print(1, f"Usage: {sys.argv[0]} <path/to/thetas/file>")
+
     theta0, theta1 = 0.0, 0.0
     try:
         theta0, theta1 = get_vars(sys.argv[1])
@@ -34,4 +35,16 @@ if __name__ == "__main__":
         exit_with_print(5, "Empty filename")
     except Exception:
         exit_with_print(6, "Some error occured")
-    print(f"theta0 is {theta0}\ntheta1 is {theta1}")
+    print(f"theta_0 is {theta0}\ntheta_1 is {theta1}")
+
+    while (True):
+        x = 0.0
+        try:
+            x = float(input("Enter the mileage (...in kilometers): "))
+            y = theta0 + theta1 * x;
+            print(f"Calculated price estmation: {y:.2f}")
+        except ValueError:
+            print("Try entering something in a floating point number format.")
+        except (EOFError, KeyboardInterrupt):
+            print("\nBye!")
+            exit(0)
