@@ -31,7 +31,7 @@ if __name__ == "__main__":
         exit_with_print(1, f"Usage: {sys.argv[0]} <path/to/csv/data/file>")
 
     principal_data = None
-    eta = 0.5
+    eta = 5e-12
     theta0, theta1 = 0.0, 0.0
     # partial deriviatives of mse by theta0 and theta1.
     # for some reason, multiplied by eta and called "tmptheta0" and
