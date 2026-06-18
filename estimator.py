@@ -2,18 +2,7 @@
 
 import sys
 from additional_exceptions import EmptyFileNameError
-from additional_utils import exit_with_print
-
-def get_vars(filepath: str = ""):
-    if (filepath == ""):
-        raise EmptyFileNameError
-    line0, line1 = "", ""
-    with open(filepath) as f:
-        line0 = f.readline().strip()
-        line1 = f.readline().strip()
-    if not line0 or not line1:
-        raise ValueError
-    return float(line0), float(line1)
+from additional_utils import exit_with_print, get_vars
 
 if __name__ == "__main__":
     if (len(sys.argv) != 2):
