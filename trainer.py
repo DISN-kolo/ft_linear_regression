@@ -4,6 +4,14 @@ import sys
 from additional_utils import exit_with_print, get_vars
 from additional_exceptions import EmptyFileNameError
 import pandas as pd
+import numpy as np
+
+def est_fun_array(t0: float, t1: float, x: np.ndarray):
+    return t0 + t1*x
+
+def mse(df, t0: float, t1: float):
+    est_y = est_fun_array(t0, t1, df["km"])
+    return sum( (est_y - df["price"]) ** 2 )/len(df)
 
 def get_df(filepath: str = ""):
     if (filepath == ""):
@@ -15,6 +23,9 @@ if __name__ == "__main__":
         exit_with_print(1, f"Usage: {sys.argv[0]} <path/to/csv/data/file>")
 
     principal_data = None
+    eta = 0.5
+    theta0, theta1 = 0.0, 0.0
+    tt0, tt1 = 0.0, 0.0
     try:
         principal_data = get_df(sys.argv[1])
     except FileNotFoundError:
@@ -35,4 +46,14 @@ if __name__ == "__main__":
     if principal_data is not None:
         print("Take a look at the data:\n", principal_data)
         print("Starting training...")
+        i = 0
+        prev_mse = mse(principal_data, theta0, theta1)*10
+        cur_mse = mse(principal_data, theta0, theta1)
+        while (abs(prev_mse - cur_mse) > 10 and i < 50):
+            print(f"\
+Iteration {i:3d}, prev mse: {prev_mse:.5f}, cur mse: {cur_mse:.5f}"
+            )
+            prev_mse = cur_mse
+            cur_mse = mse(principal_data, theta0, theta1)
+            i += 1
 
