@@ -28,8 +28,8 @@ def noiser(N, fine_std, coarse_shift, region_width, n_regions):
 
 if __name__ == "__main__":
     N = 1000
-    slope = -0.3
-    intercept = 100000.0
+    slope = -0.25
+    intercept = 80000.0
     fine_std = 15000.0
     coarse_shift = 6500.0
     region_width = 0.02
@@ -42,9 +42,10 @@ if __name__ == "__main__":
             N, fine_std, coarse_shift, region_width, n_regions)
     ys = ys + fine_noise + coarse_noise
     fine_noise, coarse_noise = noiser(
-            N, fine_std/2, coarse_shift/2, region_width/2, n_regions/2)
+            N, fine_std/2, coarse_shift*2, region_width/2, n_regions)
     xs = xs + fine_noise + coarse_noise
 
     df = pd.DataFrame({"km": xs, "price": ys})
     df = df[df["price"] > 500]
+    df = df[df["km"] > 0]
     df.to_csv("gen_data.csv", index=False)
