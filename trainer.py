@@ -62,7 +62,7 @@ if __name__ == "__main__":
         cur_mse = mse(principal_data, theta0, theta1)
         while (abs(prev_mse - cur_mse) > 10 and i < 50):
             print(f"\
-Iteration {i:3d}, prev mse: {prev_mse:.5f}, cur mse: {cur_mse:.5f}"
+Iteration {i:3d}, prev mse: {prev_mse:10.2g}, cur mse: {cur_mse:10.2g}"
             )
             dmsedt0 = partial_d_of_mse_by_theta0(
                 principal_data, theta0, theta1)
