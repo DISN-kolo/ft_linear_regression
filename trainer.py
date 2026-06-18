@@ -18,6 +18,14 @@ def get_df(filepath: str = ""):
         raise EmptyFileNameError
     return pd.read_csv(filepath)
 
+def partial_d_of_mse_by_theta0(df, t0: float, t1: float):
+    est_y = est_fun_array(t0, t1, df["km"])
+    return sum(est_y - df["price"])/len(df)
+
+def partial_d_of_mse_by_theta1(df, t0: float, t1: float):
+    est_y = est_fun_array(t0, t1, df["km"])
+    return sum( (est_y - df["price"]) * df["km"] )/len(df)
+
 if __name__ == "__main__":
     if (len(sys.argv) != 2):
         exit_with_print(1, f"Usage: {sys.argv[0]} <path/to/csv/data/file>")
@@ -25,7 +33,10 @@ if __name__ == "__main__":
     principal_data = None
     eta = 0.5
     theta0, theta1 = 0.0, 0.0
-    tt0, tt1 = 0.0, 0.0
+    # partial deriviatives of mse by theta0 and theta1.
+    # for some reason, multiplied by eta and called "tmptheta0" and
+    #"tmptheta1" in the subject.
+    dmsedt0, dmsedt1 = 0.0, 0.0
     try:
         principal_data = get_df(sys.argv[1])
     except FileNotFoundError:
@@ -53,6 +64,12 @@ if __name__ == "__main__":
             print(f"\
 Iteration {i:3d}, prev mse: {prev_mse:.5f}, cur mse: {cur_mse:.5f}"
             )
+            dmsedt0 = partial_d_of_mse_by_theta0(
+                principal_data, theta0, theta1)
+            dmsedt1 = partial_d_of_mse_by_theta1(
+                principal_data, theta0, theta1)
+            theta0 -= eta * dmsedt0
+            theta1 -= eta * dmsedt1
             prev_mse = cur_mse
             cur_mse = mse(principal_data, theta0, theta1)
             i += 1
