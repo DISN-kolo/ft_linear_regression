@@ -31,7 +31,7 @@ if __name__ == "__main__":
         exit_with_print(1, f"Usage: {sys.argv[0]} <path/to/csv/data/file>")
 
     principal_data = None
-    eta = 5e-12
+    eta = 0.3
     theta0, theta1 = 0.0, 0.0
     # partial deriviatives of mse by theta0 and theta1.
     # for some reason, multiplied by eta and called "tmptheta0" and
@@ -54,23 +54,54 @@ if __name__ == "__main__":
     except Exception:
         exit_with_print(8, "Some error occured")
 
-    if principal_data is not None:
+    if (principal_data is not None):
         print("Take a look at the data:\n", principal_data)
+        normalized_data = None
+        largest_km = max(principal_data["km"])
+        largest_price = max(principal_data["price"])
+        normalization_scales = {
+            "km": largest_km,
+            "price": largest_price
+        }
+        normalized_data = principal_data
+        normalized_data["km"] /= normalization_scales["km"]
+        normalized_data["price"] /= normalization_scales["price"]
+        print(f"Normalized. \
+Scale for km: {normalization_scales['km']:10.2g}, \
+scale for price: {normalization_scales['price']:10.2g}")
+        print("Take a look:\n", normalized_data)
+
         print("Starting training...")
         i = 0
-        prev_mse = mse(principal_data, theta0, theta1)*10
-        cur_mse = mse(principal_data, theta0, theta1)
-        while (abs(prev_mse - cur_mse) > 10 and i < 50):
+        prev_mse = mse(normalized_data, theta0, theta1)*10
+        cur_mse = mse(normalized_data, theta0, theta1)
+        while (abs(prev_mse - cur_mse) > 1e-6 and i < 500):
             print(f"\
 Iteration {i:3d}, prev mse: {prev_mse:10.2g}, cur mse: {cur_mse:10.2g}"
             )
             dmsedt0 = partial_d_of_mse_by_theta0(
-                principal_data, theta0, theta1)
+                normalized_data, theta0, theta1)
             dmsedt1 = partial_d_of_mse_by_theta1(
-                principal_data, theta0, theta1)
+                normalized_data, theta0, theta1)
             theta0 -= eta * dmsedt0
             theta1 -= eta * dmsedt1
             prev_mse = cur_mse
-            cur_mse = mse(principal_data, theta0, theta1)
+            cur_mse = mse(normalized_data, theta0, theta1)
             i += 1
-
+        print("results:")
+        print(f"theta0 is {theta0:10.5g}")
+        print(f"theta1 is {theta1:10.5g}")
+        print("Well, since we normalized the dataset before, time to \
+un-normalize it.")
+        # y = t0 + t1*x
+        # if the x is X times smaller, and y is Y times smaller,
+        # y/Y = t0b + t1b*x/X
+        # y = Y*(t0b + t1b*x/X)
+        # y = Y*t0b + Y/X*t1b*x
+        # => t0 = t0b*Y
+        #    t1 = t1b*Y/X
+        theta0 *= normalization_scales["price"]
+        theta1 *= normalization_scales["price"]/normalization_scales["km"]
+        print("REAL results:")
+        print(f"theta0 is {theta0:10.5g}")
+        print(f"theta1 is {theta1:10.5g}")
