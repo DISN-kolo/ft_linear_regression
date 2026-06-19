@@ -64,7 +64,7 @@ if __name__ == "__main__":
             "km": largest_km,
             "price": largest_price
         }
-        normalized_data = principal_data
+        normalized_data = principal_data.copy()
         normalized_data["km"] /= normalization_scales["km"]
         normalized_data["price"] /= normalization_scales["price"]
         print(f"Normalized. \
@@ -78,7 +78,7 @@ scale for price: {normalization_scales['price']:10.2g}")
         cur_mse = mse(normalized_data, theta0, theta1)
         while (abs(prev_mse - cur_mse) > 1e-6 and i < 500):
             print(f"\
-Iteration {i:3d}, prev mse: {prev_mse:10.2g}, cur mse: {cur_mse:10.2g}"
+Iteration {i:3d}, prev mse: {prev_mse:10.6g}, cur mse: {cur_mse:10.6g}"
             )
             dmsedt0 = partial_d_of_mse_by_theta0(
                 normalized_data, theta0, theta1)
@@ -106,6 +106,16 @@ un-normalize it.")
         print("REAL results:")
         print(f"theta0 is {theta0:10.5g}")
         print(f"theta1 is {theta1:10.5g}")
+
+        mean_price = principal_data["price"].mean()
+        est_final = est_fun_array(theta0, theta1, principal_data["km"])
+        r_squared = (1 - sum( (principal_data["price"] - est_final) ** 2 )
+            / sum( (principal_data["price"] - mean_price) ** 2 ) )
+        print(f"\
+         sum[(price_i - estimatePrice_i)²]\n\
+R² = 1 - ---------------------------------\
+   = {r_squared:10.5g}\n\
+            sum[(price_i - meanPrice)²]")
 
         out_fname = "thetas"
         if (len(sys.argv) == 3):
