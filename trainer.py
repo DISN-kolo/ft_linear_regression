@@ -40,6 +40,8 @@ if __name__ == "__main__":
     dmsedt0, dmsedt1 = 0.0, 0.0
     try:
         principal_data = get_df(sys.argv[1])
+        if (not "km" in principal_data) or (not "price" in principal_data):
+            raise ValueError
     except FileNotFoundError:
         exit_with_print(2, f"{sys.argv[1]} not found")
     except PermissionError:
