@@ -27,8 +27,9 @@ def partial_d_of_mse_by_theta1(df, t0: float, t1: float):
     return sum( (est_y - df["price"]) * df["km"] )/len(df)
 
 if __name__ == "__main__":
-    if (len(sys.argv) != 2):
-        exit_with_print(1, f"Usage: {sys.argv[0]} <path/to/csv/data/file>")
+    if (len(sys.argv) != 2 and len(sys.argv) != 3):
+        exit_with_print(1, f"Usage: {sys.argv[0]} <path/to/csv/data/file> \
+[path/to/thetas]")
 
     principal_data = None
     eta = 0.3
@@ -105,3 +106,15 @@ un-normalize it.")
         print("REAL results:")
         print(f"theta0 is {theta0:10.5g}")
         print(f"theta1 is {theta1:10.5g}")
+
+        out_fname = "thetas"
+        if (len(sys.argv) == 3):
+            fname = sys.argv[2]
+        else:
+            fname = "thetas"
+        try:
+            with open(fname, "w") as f:
+                f.write(f"{theta0:10.5g}\n{theta1:10.5g}\n")
+        except Exception:
+            exit_with_print(9, f"Some error occured on writing \
+thetas file ({fname})")
